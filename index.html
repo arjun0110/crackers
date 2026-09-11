@@ -292,6 +292,38 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:16px 40px;justify-content:space-bet
 footer b{color:var(--ink-2);font-weight:600}
 footer a{color:var(--saffron);text-decoration:none;font-weight:500}
 footer a:hover{text-decoration:underline}
+.footrow{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.footrow .btn{width:100%;justify-content:center}
+.sent{display:none;padding:11px 13px;border-radius:var(--r);background:var(--good-soft);border:1px solid var(--good);color:var(--good);font-size:12.5px;line-height:1.5}
+.sent.show{display:block}
+.sent b{font-family:"IBM Plex Mono",monospace;font-size:14px;letter-spacing:.02em}
+
+/* ── Printable order copy ─────────────────── */
+#bill{display:none}
+@media print{
+  body>*:not(#bill){display:none!important}
+  body{padding:0!important;background:#fff!important;color:#000!important}
+  #bill{display:block!important;font-family:"Instrument Sans",system-ui,sans-serif;color:#000;font-size:11px;padding:0}
+  @page{size:A4;margin:12mm 12mm 14mm}
+  #bill .bh{display:flex;justify-content:space-between;gap:16px;border-bottom:2px solid #000;padding-bottom:8px}
+  #bill .bh h2{font-family:"Bricolage Grotesque",sans-serif;font-size:21px;margin:0 0 3px;letter-spacing:-.01em}
+  #bill .bh .addr{font-size:9.5px;line-height:1.5;max-width:62mm}
+  #bill .bh .ref{text-align:right;font-size:9.5px;line-height:1.7;white-space:nowrap}
+  #bill .bh .ref .rn{font-family:"IBM Plex Mono",monospace;font-size:15px;font-weight:600;display:block}
+  #bill .tag{display:inline-block;border:1.5px solid #000;padding:2px 7px;font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;margin-top:5px}
+  #bill .to{border:1px solid #000;padding:7px 9px;margin:9px 0;font-size:10px;line-height:1.6}
+  #bill .to .lab{font-size:8.5px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;margin-bottom:2px}
+  #bill table{width:100%;border-collapse:collapse;font-size:10px}
+  #bill thead th{border-bottom:1.5px solid #000;text-align:left;padding:4px 5px;font-size:8.5px;letter-spacing:.1em;text-transform:uppercase}
+  #bill td{border-bottom:1px solid #d8d8d8;padding:4px 5px;vertical-align:top}
+  #bill tr{break-inside:avoid}
+  #bill .cg td{background:#eee;font-weight:700;font-size:9px;letter-spacing:.1em;text-transform:uppercase;border-bottom:1px solid #000}
+  #bill .ta{font-family:"Anek Tamil",sans-serif;font-size:9.5px;color:#333}
+  #bill .r{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+  #bill tfoot td{padding:4px 5px;font-variant-numeric:tabular-nums;border:0}
+  #bill tfoot .gt td{border-top:1.5px solid #000;font-weight:700;font-size:13px;font-family:"Bricolage Grotesque",sans-serif}
+  #bill .note{margin-top:10px;border-top:1px solid #000;padding-top:6px;font-size:8.5px;line-height:1.6;color:#333}
+}
 .toast{
   position:fixed;left:50%;bottom:104px;transform:translate(-50%,14px);z-index:90;
   background:var(--brand-bg);color:var(--brand-fg);padding:10px 16px;border-radius:999px;
@@ -418,13 +450,23 @@ footer a:hover{text-decoration:underline}
     </form>
   </div>
   <div class="sheetfoot">
+    <div class="sent" id="sentBox"></div>
     <button class="btn btn-wa" id="waBtn" type="button">
       <svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.4c-.3-.2-1.8-.9-2.1-1-.3-.1-.5-.2-.7.1-.2.3-.8 1-1 1.2-.2.2-.4.2-.7.1-.3-.2-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6.1-.2.5-.6.6-.8.2-.2.2-.4.3-.6.1-.2 0-.4 0-.5 0-.2-.7-1.7-.9-2.3-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.1 1.1-1.1 2.6s1.1 3 1.3 3.2c.1.2 2.1 3.3 5.2 4.5 2.6 1 3.2.8 3.7.8.6-.1 1.8-.7 2-1.5.3-.7.3-1.4.2-1.5 0-.1-.2-.2-.4-.3zM12 21.7c-1.7 0-3.4-.5-4.9-1.4l-.4-.2-3.6.9.9-3.5-.2-.4c-1-1.5-1.5-3.3-1.5-5.1C2.3 6.6 6.6 2.3 12 2.3S21.7 6.6 21.7 12 17.4 21.7 12 21.7zM12 .5C5.6.5.5 5.6.5 12c0 2 .5 4 1.5 5.8L.3 23.7l6-1.6c1.7.9 3.7 1.4 5.7 1.4 6.4 0 11.5-5.1 11.5-11.5S18.4.5 12 .5z"/></svg>
       Send order on WhatsApp
     </button>
-    <button class="btn btn-ghost" id="copyBtn" type="button" style="width:100%;justify-content:center">Copy order as text instead</button>
+    <div class="footrow">
+      <button class="btn btn-ghost" id="pdfBtn" type="button">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 11l5 5 5-5"/><path d="M4 19h16"/></svg>
+        Save order copy (PDF)
+      </button>
+      <button class="btn btn-ghost" id="copyBtn" type="button">Copy as text</button>
+    </div>
   </div>
 </aside>
+
+<!-- Printable order copy. Hidden on screen, and the only thing that prints. -->
+<div id="bill" role="document"></div>
 
 <div class="toast" id="toast"></div>
 
@@ -436,7 +478,11 @@ footer a:hover{text-decoration:underline}
 const SHOP = {
   whatsapp: "917845269020",   // country code + number, digits only. 91 = India
   minOrder: 2500,             // minimum order value in rupees. Set 0 to disable
-  name:     "Global Crackers"
+  name:     "Global Crackers",
+  // Paste your Google Apps Script Web App URL between the quotes to switch on
+  // order logging + emailed PDF. Leave it empty and the page still works
+  // exactly as before (WhatsApp only). See SETUP-ORDER-TRACKING.md
+  sheetEndpoint: ""
 };
 /* ═══════════════════════════════════════════════════ */
 
@@ -515,6 +561,7 @@ function totals() {
 
 function refresh() {
   const t = totals();
+  if (!cart.size) { REF = null; $('sentBox')?.classList.remove('show'); }  // fresh basket, fresh reference
   $('bar').classList.toggle('show', t.n > 0);
   $('barCount').textContent = `${t.n} ${t.n === 1 ? 'box' : 'boxes'} · ${cart.size} ${cart.size === 1 ? 'item' : 'items'}`;
   $('barTotal').textContent = inr(t.pay);
@@ -622,52 +669,152 @@ function validate() {
   return ok;
 }
 
-function orderText() {
+/* ── One order object, shared by WhatsApp / PDF / sheet ─ */
+const esc = s => String(s ?? '').replace(/[&<>"']/g,
+  m => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m]));
+
+const customer = () => ({
+  name:  $('cName').value.trim(), phone: $('cPhone').value.trim(),
+  pin:   $('cPin').value.trim(),  addr:  $('cAddr').value.trim(),
+  note:  $('cNote').value.trim()
+});
+
+// One reference per basket. The WhatsApp message, the PDF the customer saves and
+// the row in the sheet all carry the same number. Cleared when the basket empties.
+let REF = null;
+const refNo = () => (REF = REF || 'GC' + Date.now().toString(36).slice(-5).toUpperCase());
+
+function currentOrder() {
   const t = totals();
-  const stamp = new Date().toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' });
-  const ref = 'GC' + Date.now().toString(36).slice(-5).toUpperCase();
-  const byCat = new Map();
-  for (const [code, q] of cart) {
-    const it = ITEM.get(code);
-    if (!byCat.has(it.cat)) byCat.set(it.cat, []);
-    byCat.get(it.cat).push(`${it.c}. ${it.n} — ${q} × ${inr(it.p)} = ${inr(it.p * q)}`);
-  }
-  const body = [...byCat].map(([cat, ls]) => `*${cat}*\n${ls.join('\n')}`).join('\n\n');
-  return [
-    `*NEW ORDER — ${SHOP.name}*`,
-    `Ref ${ref} · ${stamp}`,
-    ``,
-    body,
-    ``,
-    `─────────────`,
-    `Items: ${cart.size}  ·  Boxes: ${t.n}`,
-    `List value: ${inr(t.mrp)}`,
-    `Discount: −${inr(t.save)}`,
-    `*TOTAL PAYABLE: ${inr(t.pay)}*`,
-    `(transport extra)`,
-    ``,
-    `*Deliver to*`,
-    `${$('cName').value.trim()}`,
-    `${$('cPhone').value.trim()}`,
-    `${$('cAddr').value.trim()}`,
-    `Pincode ${$('cPin').value.trim()}`,
-    $('cNote').value.trim() ? `\n*Note:* ${$('cNote').value.trim()}` : ``
-  ].join('\n').trim();
+  return {
+    ref: refNo(),
+    at: new Date().toISOString(),
+    stamp: new Date().toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' }),
+    shop: SHOP.name,
+    customer: customer(),
+    lines: [...cart].map(([code, q]) => {
+      const it = ITEM.get(code);
+      return { code: it.c, name: it.n, tamil: it.t, unit: it.u, cat: it.cat,
+               rate: it.p, mrp: it.m, qty: q, amount: it.p * q };
+    }),
+    totals: { items: cart.size, boxes: t.n, mrp: t.mrp, save: t.save, pay: t.pay }
+  };
 }
 
+// Line items keyed by category, in catalogue order.
+function grouped(o) {
+  const m = new Map();
+  for (const l of o.lines) {
+    if (!m.has(l.cat)) m.set(l.cat, []);
+    m.get(l.cat).push(l);
+  }
+  return m;
+}
+
+function orderText(o) {
+  const c = o.customer;
+  const body = [...grouped(o)].map(([cat, ls]) =>
+    `*${cat}*\n` + ls.map(l => `${l.code}. ${l.name} — ${l.qty} × ${inr(l.rate)} = ${inr(l.amount)}`).join('\n')
+  ).join('\n\n');
+  const out = [
+    `*NEW ORDER — ${o.shop}*`, `Ref ${o.ref} · ${o.stamp}`, ``, body, ``,
+    `─────────────`,
+    `Items: ${o.totals.items}  ·  Boxes: ${o.totals.boxes}`,
+    `List value: ${inr(o.totals.mrp)}`,
+    `Discount: −${inr(o.totals.save)}`,
+    `*TOTAL PAYABLE: ${inr(o.totals.pay)}*`,
+    `(transport extra)`
+  ];
+  if (c.name && c.phone) out.push(``, `*Deliver to*`, c.name, c.phone, c.addr, `Pincode ${c.pin}`);
+  if (c.note) out.push(``, `*Note:* ${c.note}`);
+  return out.join('\n').trim();
+}
+
+/* ── File the order with the shop (Apps Script) ─────── */
+function fileOrder(o) {
+  if (!SHOP.sheetEndpoint) return;
+  try {
+    fetch(SHOP.sheetEndpoint, {
+      method: 'POST', mode: 'no-cors', keepalive: true,
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(o)
+    }).catch(() => {});           // fire and forget — WhatsApp is the guaranteed channel
+  } catch (_) { /* never block the order */ }
+}
+
+/* ── Printable order copy ───────────────────────────── */
+function renderBill(o) {
+  const c = o.customer;
+  const rows = [...grouped(o)].map(([cat, ls]) =>
+    `<tr class="cg"><td colspan="6">${esc(cat)}</td></tr>` +
+    ls.map(l => `<tr><td class="r">${esc(l.code)}</td>` +
+      `<td>${esc(l.name)}<div class="ta">${esc(l.tamil)}</div></td>` +
+      `<td>${esc(l.unit)}</td><td class="r">${inr(l.rate)}</td>` +
+      `<td class="r">${l.qty}</td><td class="r">${inr(l.amount)}</td></tr>`).join('')
+  ).join('');
+  const tf = (lab, val, cls = '') =>
+    `<tr class="${cls}"><td colspan="3"></td><td colspan="2" class="r">${lab}</td><td class="r">${val}</td></tr>`;
+  $('bill').innerHTML = `
+    <div class="bh">
+      <div>
+        <h2>Global Crackers</h2>
+        <div class="addr">64/6A2, Valayapatti Village, Perungudi – Kappalur four way lane,
+          (Near Valayankulam Toll Gate), Madurai – 625 022, Tamilnadu, India.<br>
+          +91 99 44 98 98 98 , 97 87 27 87 97<br>
+          www.globalcrackersindia.com · globalcrackersindia@gmail.com</div>
+        <span class="tag">Order copy</span>
+      </div>
+      <div class="ref"><span class="rn">${esc(o.ref)}</span>${esc(o.stamp)}<br>
+        Deepavali 2026 price list<br>Up to 80% off factory price</div>
+    </div>
+    ${c.name ? `<div class="to"><div class="lab">Deliver to</div>
+      <b>${esc(c.name)}</b> · ${esc(c.phone)}<br>${esc(c.addr).replace(/\n/g, '<br>')}<br>
+      Pincode ${esc(c.pin)}${c.note ? `<br><br><span class="lab">Note</span><br>${esc(c.note)}` : ''}</div>` : ''}
+    <table>
+      <thead><tr><th class="r">Code</th><th>Product</th><th>Content</th>
+        <th class="r">Rate</th><th class="r">Qty</th><th class="r">Amount</th></tr></thead>
+      <tbody>${rows}</tbody>
+      <tfoot>
+        ${tf('Items / boxes', `${o.totals.items} / ${o.totals.boxes}`)}
+        ${tf('List value', inr(o.totals.mrp))}
+        ${tf('Discount', '− ' + inr(o.totals.save))}
+        ${tf('Total payable', inr(o.totals.pay), 'gt')}
+      </tfoot>
+    </table>
+    <div class="note"><b>Transport charges extra.</b> This is an order copy for your records, not a
+      tax invoice. Stock availability, packing list and transport cost are confirmed on WhatsApp
+      before any payment is made. Minimum order ${inr(SHOP.minOrder)}.
+      Please quote reference <b>${esc(o.ref)}</b> in all correspondence.</div>`;
+}
+
+/* ── Actions ────────────────────────────────────────── */
 $('waBtn').onclick = () => {
   if (!validate()) return;
-  const msg = orderText();
+  const o = currentOrder();
+  fileOrder(o);
+  const msg = orderText(o);
   if (msg.length > 1800) {
     navigator.clipboard?.writeText(msg);
-    toast('Order is long — copied to clipboard. Paste it in WhatsApp.');
+    toast('Long order — also copied to your clipboard.');
   }
   window.open(`https://wa.me/${SHOP.whatsapp}?text=${encodeURIComponent(msg)}`, '_blank', 'noopener');
+  const s = $('sentBox');
+  s.innerHTML = `Order <b>${esc(o.ref)}</b> sent on WhatsApp. We will confirm stock and transport before any payment.`
+              + (SHOP.sheetEndpoint ? ' A copy has been filed at the shop.' : '')
+              + ` Tap “Save order copy” to keep a PDF.`;
+  s.classList.add('show');
+};
+
+$('pdfBtn').onclick = () => {
+  if (!cart.size) return toast('Add some items first.');
+  if (!validate()) return;
+  renderBill(currentOrder());
+  setTimeout(() => window.print(), 60);
 };
 
 $('copyBtn').onclick = async () => {
   if (!cart.size) return toast('Add some items first.');
-  try { await navigator.clipboard.writeText(orderText()); toast('Order copied. Paste it anywhere.'); }
+  try { await navigator.clipboard.writeText(orderText(currentOrder())); toast('Order copied. Paste it anywhere.'); }
   catch { toast('Copy failed — select the order text manually.'); }
 };
 
